@@ -2,22 +2,27 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 function Todos() {
-    const [todos, setTodos] = useState<string[]>(["get ready to survive", "clean server room"]);
+    const [todos, setTodos] = useState<string[]>([]);
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
         setTodos(todos.concat(e.target.todo.value));
+        e.target.todo.value = "";
     }
     return (
         <RootDiv>
-            <Empty/>
-            <TodosDiv>
-                {todos.map(it => (<Todo>{it}</Todo>))}
-                <form id="addTodoForm" onSubmit={handleSubmit}>
-                    <input type="text" name="todo" placeholder="what to do?"></input>
-                    <input type="submit" value="submit"></input>
-                </form>
-            </TodosDiv>
+            <Empty />
+            <ListView>
+                <TodosDiv>
+                    {todos.map(it => (<Todo>{it}</Todo>))}
+                </TodosDiv>
+                <InputDiv>
+                    <form id="addTodoForm" onSubmit={handleSubmit}>
+                        <TodoInput type="text" name="todo" placeholder="what to do?"></TodoInput>
+                        <input type="hidden" value="submit"></input>
+                    </form>
+                </InputDiv>
+            </ListView>
             <Empty />
         </RootDiv>
     )
@@ -32,6 +37,9 @@ const RootDiv = styled.div`
     grid-template-columns: 20% 60% 20%;
 `
 const Empty = styled.div``
+const ListView = styled.div`
+
+`
 const TodosDiv = styled.div`
     margin: 10px;
     background-color: white;
@@ -46,8 +54,11 @@ const Todo = styled.div`
     padding: 5px;
     text-align: center;
 `
+const InputDiv = styled.div`
+    margin: 10px;
+    text-align: center;
+`
 const TodoInput = styled.input`
     height: 50px;
-    width: 100%;
     font-size: 30px;
 `
