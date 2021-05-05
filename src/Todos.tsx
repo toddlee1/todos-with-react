@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 function Todos() {
@@ -9,16 +9,39 @@ function Todos() {
         setTodos(todos.concat(e.target.todo.value));
         e.target.todo.value = "";
     }
+
+    const handleDelete = (index: number, e: any) => {
+        e.preventDefault();
+        let temp = todos.slice();
+        temp.splice(index, 1);
+        setTodos(temp);
+    }
+
+    useEffect(() => {
+        console.log(todos);
+    }, [todos]);
+
     return (
         <RootDiv>
             <Empty />
             <ListView>
                 <TodosDiv>
-                    {todos.map(it => (<Todo>{it}</Todo>))}
+                    {
+                        todos.map((it, index) => (
+                            <Todo key={index}>
+                                <Content>{it}</Content>
+                                <DeleteBtn>
+                                    <button onClick={(e) => handleDelete(index, e)}>
+                                        del
+                                    </button>
+                                </DeleteBtn>
+                            </Todo>
+                        ))
+                    }
                 </TodosDiv>
                 <InputDiv>
                     <form id="addTodoForm" onSubmit={handleSubmit}>
-                        <TodoInput type="text" name="todo" placeholder="what to do?"></TodoInput>
+                        <TodoInput type="text" name="todo" placeholder="what to do"></TodoInput>
                         <input type="hidden" value="submit"></input>
                     </form>
                 </InputDiv>
@@ -37,9 +60,7 @@ const RootDiv = styled.div`
     grid-template-columns: 20% 60% 20%;
 `
 const Empty = styled.div``
-const ListView = styled.div`
-
-`
+const ListView = styled.div``
 const TodosDiv = styled.div`
     margin: 10px;
     background-color: white;
@@ -49,10 +70,19 @@ const TodosDiv = styled.div`
 `
 const Todo = styled.div`
     border-bottom: solid 0.5px;
+    display: flow;
     height: 50px;
-    font-size: 40px;
     padding: 5px;
+`
+const Content = styled.div`
     text-align: center;
+    font-size: 40px;
+    width: 90%;
+`
+const DeleteBtn = styled.div`
+    text-align: center;
+    border-left: dotted 0.5px;
+    width: 10%;
 `
 const InputDiv = styled.div`
     margin: 10px;
@@ -61,4 +91,5 @@ const InputDiv = styled.div`
 const TodoInput = styled.input`
     height: 50px;
     font-size: 30px;
+    text-align: center;
 `
